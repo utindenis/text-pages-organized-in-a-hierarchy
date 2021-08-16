@@ -1,0 +1,7 @@
+<h1>New category (parent: "<%= @parent ? @parent.title : 'Hello' %>")</h1>
+
+<%= render template: 'categories/_form', locals: {
+  form_url: @parent ? @parent.create_url : @category.create_url,
+  form_method: 'post'
+} %>
+<%= link_to 'Back', @parent ? @parent.url : '/' %>

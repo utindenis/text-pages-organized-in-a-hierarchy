@@ -1,0 +1,10 @@
+<% return unless branch.any? %>
+
+<ul>
+  <% branch.each do |elem| %>
+    <li>
+      <%= link_to elem[:item].title, elem[:item].url %>
+      <%= render template: 'categories/branch', locals: { branch: elem[:children] } %>
+    </li>
+  <% end %>
+</ul>

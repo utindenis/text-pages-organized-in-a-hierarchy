@@ -1,0 +1,7 @@
+<h1>Edit category "<%= @category.title %>"</h1>
+
+<%= render template: 'categories/_form', locals: {
+  form_url: @category.update_url,
+  form_method: 'put'
+} %>
+<%= link_to 'Back', @category.url %>

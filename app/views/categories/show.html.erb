@@ -1,0 +1,8 @@
+<h1><%= @category.title %></h1>
+<p><%= @category.text_html.html_safe %></p>
+
+<%= render template: 'categories/branch', locals: { branch: @category.tree } %>
+<%= link_to 'Create sub', @category.add_url %>
+<%= link_to 'Edit', @category.edit_url %>
+<%= link_to 'Delete', @category.delete_url, method: :delete, data: { confirm: 'Are you sure' } %>
+<%= link_to 'Back', @category.parent_url %>
