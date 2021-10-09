@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Description/Explanation of Category class
 class Category < ApplicationRecord
   validates :title,
@@ -14,7 +16,7 @@ class Category < ApplicationRecord
 
   def check_action_in_alias
     data = %w[index add create edit update delete]
-    errors.add(:alias, 'can\'t be the same words: ' + data.join(', ')) if data.include?(self[:alias])
+    errors.add(:alias, "can't be the same words: #{data.join(', ')}") if data.include?(self[:alias])
   end
 
   def check_unique_alias
@@ -27,13 +29,13 @@ class Category < ApplicationRecord
     self[:text_html] = HTMLEntities.new.encode(val)
                                    .gsub(/\r/, '')
                                    .gsub(/\n/, '<br>')
-                                   .gsub(/\*{2}(.*?)\*{2}/) { '<b>' + $1 + '</b>' }
-                                   .gsub(/\\{2}(.*?)\\{2}/) { '<i>' + $1 + '</i>' }
-                                   .gsub(/\({2}(?:(?:https?:)?(?:\/{2}[^\/]+))?(\/?.*?)\s+(.*?)\){2}/) { '<a href="' + $1 + '">' + $2 + '</a>' }
+                                   .gsub(/\*{2}(.*?)\*{2}/) { "<b>#{Regexp.last_match(1)}</b>" }
+                                   .gsub(/\\{2}(.*?)\\{2}/) { "<i>#{Regexp.last_match(1)}</i>" }
+                                   .gsub(%r{\({2}(?:(?:https?:)?(?:/{2}[^/]+))?(/?.*?)\s+(.*?)\){2}}) { "<a href=\"#{Regexp.last_match(1)}\">#{Regexp.last_match(2)}</a>" }
   end
 
   def url(action = '')
-    action = '/' + action if action.size.nonzero?
+    action = "/#{action}" if action.size.nonzero?
     result = (self[:url] || '') + action
 
     return '/' if result.size.zero?
@@ -84,11 +86,11 @@ class Category < ApplicationRecord
 
   def self.by_alias(link)
     link ||= ''
-    link.gsub(/(^\/*)|(\/*$)/, '')
+    link.gsub(%r{(^/*)|(/*$)}, '')
 
     return nil if link.size.zero?
 
-    self.where(url: '/' + link).first
+    where(url: "/#{link}").first
   end
 
   def tree
@@ -100,9 +102,7 @@ class Category < ApplicationRecord
     list ||= Category.all
 
     list.each do |item|
-      if item.parent_id == parent_id
-        result.push({ item: item, children: self.tree(item.id, list) })
-      end
+      result.push({ item: item, children: tree(item.id, list) }) if item.parent_id == parent_id
     end
 
     result

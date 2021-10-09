@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Description/Explanation of CategoriesController
 class CategoriesController < ApplicationController
   # GET /categories or /categories.json
@@ -13,9 +15,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1 or /categories/1.json
   def show
     @category = Category.by_alias params[:alias]
-    if @category.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if @category.nil?
 
     @children = @category.children
 
@@ -30,9 +30,7 @@ class CategoriesController < ApplicationController
     @category = Category.new
     @parent = Category.by_alias params[:alias]
 
-    if params[:alias] && @parent.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if params[:alias] && @parent.nil?
 
     respond_to do |format|
       format.html # new.html.erb
@@ -43,9 +41,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1/edit
   def edit
     @category = Category.by_alias params[:alias]
-    if @category.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if @category.nil?
 
     respond_to do |format|
       format.html # new.html.erb
@@ -58,9 +54,7 @@ class CategoriesController < ApplicationController
     @category = Category.new
     @parent = Category.by_alias params[:alias]
 
-    if params[:alias] && @parent.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if params[:alias] && @parent.nil?
 
     @parent ||= Category.new
 
@@ -83,9 +77,7 @@ class CategoriesController < ApplicationController
   # PATCH/PUT /categories/1 or /categories/1.json
   def update
     @category = Category.by_alias params[:alias]
-    if @category.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if @category.nil?
 
     @category.title = params[:category][:title]
     @category.alias = params[:category][:alias]
@@ -105,9 +97,7 @@ class CategoriesController < ApplicationController
   # DELETE /categories/1 or /categories/1.json
   def destroy
     @category = Category.by_alias params[:alias]
-    if @category.nil?
-      raise ActionController::RoutingError, 'Not found'
-    end
+    raise ActionController::RoutingError, 'Not found' if @category.nil?
 
     parent_url = @category.parent_url
     @category.destroy_tree
